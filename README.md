@@ -2,8 +2,9 @@
 # Myntra Products Review Scraper and Dashboard
 
 ## Overview
-This project is a web application that scrapes product reviews from Myntra, a popular online fashion retailer. The application enables users to search for products,
-scrape their reviews, and analyze the data visually through interactive dashboards built using Streamlit.
+This project is a web application that scrapes product reviews from Myntra, a popular online fashion retailer.
+The application enables users to search for products, scrape their reviews, and analyze the data visually
+through interactive dashboards built using Streamlit.
 
 ## Features
 - **Product Review Scraping**: Automatically fetches reviews, ratings, and pricing information from Myntra.
