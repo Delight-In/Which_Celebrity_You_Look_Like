@@ -1,8 +1,9 @@
 ```markdown
-# Myntra Review Scraper and Dashboard
+# Myntra Products Review Scraper and Dashboard
 
 ## Overview
-This project is a web application that scrapes product reviews from Myntra, a popular online fashion retailer. The application enables users to search for products, scrape their reviews, and analyze the data visually through interactive dashboards built using Streamlit.
+This project is a web application that scrapes product reviews from Myntra, a popular online fashion retailer. The application enables users to search for products,
+scrape their reviews, and analyze the data visually through interactive dashboards built using Streamlit.
 
 ## Features
 - **Product Review Scraping**: Automatically fetches reviews, ratings, and pricing information from Myntra.
@@ -78,10 +79,4 @@ def display_general_info(self):
 ## Error Handling
 The application includes robust error handling using a custom `CustomException` class, ensuring that issues during scraping or data processing are caught and logged appropriately.
 
-## Acknowledgments
-- [Selenium](https://www.selenium.dev/) for web automation.
-- [BeautifulSoup](https://www.crummy.com/software/BeautifulSoup/) for HTML parsing.
-- [Streamlit](https://streamlit.io/) for building the web application interface.
-- [Pandas](https://pandas.pydata.org/) for data manipulation and analysis.
-- [Plotly](https://plotly.com/) for creating interactive visualizations.
 ```
