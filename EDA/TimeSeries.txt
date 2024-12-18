@@ -1,0 +1,635 @@
+Here are **100 EDA (Exploratory Data Analysis)** techniques specifically for time series data. These techniques span a wide range of data processing, feature extraction, and visualization methods to gain insights from time series data:
+
+---
+
+### **1. Basic Data Exploration**
+1. **Inspect First Few Rows**
+    ```python
+    df.head()
+    ```
+
+2. **Check Time Range (Start/End)**
+    ```python
+    print(df['date'].min(), df['date'].max())
+    ```
+
+3. **Check for Missing Values**
+    ```python
+    df.isnull().sum()
+    ```
+
+4. **Describe Data Summary (Statistics)**
+    ```python
+    df.describe()
+    ```
+
+5. **Check Data Types**
+    ```python
+    df.dtypes
+    ```
+
+---
+
+### **2. Time Series Index Exploration**
+6. **Ensure Datetime Format**
+    ```python
+    df['date'] = pd.to_datetime(df['date'])
+    ```
+
+7. **Set Date as Index**
+    ```python
+    df.set_index('date', inplace=True)
+    ```
+
+8. **Check Time Interval (Frequency)**
+    ```python
+    df.index.to_series().diff().mode()[0]
+    ```
+
+9. **Resample Data to Different Frequencies**
+    ```python
+    df_resampled = df.resample('D').mean()  # Resample by day
+    ```
+
+10. **Check for Duplicates**
+    ```python
+    df.duplicated().sum()
+    ```
+
+---
+
+### **3. Data Visualizations**
+11. **Plot Time Series Data**
+    ```python
+    df['value'].plot(title='Time Series Plot')
+    ```
+
+12. **Plot Rolling Mean (Smoothing)**
+    ```python
+    df['value'].rolling(window=7).mean().plot(title='7-Day Rolling Mean')
+    ```
+
+13. **Plot Multiple Time Series**
+    ```python
+    df[['series1', 'series2']].plot()
+    ```
+
+14. **Plot Decomposed Time Series (Trend, Seasonality)**
+    ```python
+    from statsmodels.tsa.seasonal import seasonal_decompose
+    result = seasonal_decompose(df['value'], model='additive', period=365)
+    result.plot()
+    ```
+
+15. **Seasonal Subseries Plot**
+    ```python
+    from statsmodels.graphics.tsaplots import seasonal_plot
+    seasonal_plot(df['value'], freq=12)
+    ```
+
+---
+
+### **4. Trend and Seasonality**
+16. **Check for Trend (Moving Average)**
+    ```python
+    df['trend'] = df['value'].rolling(window=12).mean()
+    df['value'].plot(label='Original')
+    df['trend'].plot(label='Trend')
+    ```
+
+17. **Plot Autocorrelation Function (ACF)**
+    ```python
+    from statsmodels.graphics.tsaplots import plot_acf
+    plot_acf(df['value'])
+    ```
+
+18. **Plot Partial Autocorrelation Function (PACF)**
+    ```python
+    from statsmodels.graphics.tsaplots import plot_pacf
+    plot_pacf(df['value'])
+    ```
+
+19. **Seasonal Decomposition of Time Series (STL)**
+    ```python
+    from statsmodels.tsa.seasonal import STL
+    stl = STL(df['value'], seasonal=13)
+    result = stl.fit()
+    result.plot()
+    ```
+
+20. **Visualize Periodicity**
+    ```python
+    from numpy.fft import fft
+    fft_result = fft(df['value'])
+    plt.plot(np.abs(fft_result))
+    ```
+
+---
+
+### **5. Statistical Testing**
+21. **Test for Stationarity (Augmented Dickey-Fuller Test)**
+    ```python
+    from statsmodels.tsa.stattools import adfuller
+    adf_test = adfuller(df['value'])
+    print(adf_test)
+    ```
+
+22. **Test for Seasonality (Chi-Square Test)**
+    ```python
+    from scipy.stats import chi2_contingency
+    chi2_stat, p_val, dof, expected = chi2_contingency(df['value'])
+    ```
+
+23. **Calculate Autocorrelation Coefficients**
+    ```python
+    autocorr = df['value'].autocorr(lag=1)
+    ```
+
+24. **Test for Normality (Shapiro-Wilk)**
+    ```python
+    from scipy.stats import shapiro
+    stat, p = shapiro(df['value'])
+    ```
+
+25. **Visualize Distribution of Data**
+    ```python
+    df['value'].hist()
+    ```
+
+---
+
+### **6. Dealing with Missing Values**
+26. **Fill Missing Data with Forward Fill**
+    ```python
+    df.fillna(method='ffill', inplace=True)
+    ```
+
+27. **Fill Missing Data with Interpolation**
+    ```python
+    df.interpolate(method='linear', inplace=True)
+    ```
+
+28. **Fill Missing Data with Mean/Median**
+    ```python
+    df['value'].fillna(df['value'].mean(), inplace=True)
+    ```
+
+29. **Drop Rows with Missing Values**
+    ```python
+    df.dropna(inplace=True)
+    ```
+
+30. **Check Missing Data per Column**
+    ```python
+    df.isnull().mean()
+    ```
+
+---
+
+### **7. Correlation Analysis**
+31. **Check Correlation Between Series**
+    ```python
+    df.corr()
+    ```
+
+32. **Heatmap of Correlation Matrix**
+    ```python
+    import seaborn as sns
+    sns.heatmap(df.corr(), annot=True)
+    ```
+
+33. **Scatter Plot Between Two Series**
+    ```python
+    df.plot.scatter(x='series1', y='series2')
+    ```
+
+34. **Calculate Lagged Correlation**
+    ```python
+    df['value'].autocorr(lag=3)
+    ```
+
+35. **Plot Cross-Correlation Between Series**
+    ```python
+    from pandas.plotting import autocorrelation_plot
+    autocorrelation_plot(df['value'])
+    ```
+
+---
+
+### **8. Feature Engineering**
+36. **Create Lag Features**
+    ```python
+    df['lag_1'] = df['value'].shift(1)
+    ```
+
+37. **Create Rolling Window Features (Mean, Std)**
+    ```python
+    df['rolling_mean'] = df['value'].rolling(window=12).mean()
+    ```
+
+38. **Calculate Moving Average (Smoothing)**
+    ```python
+    df['moving_average'] = df['value'].rolling(window=30).mean()
+    ```
+
+39. **Compute Cumulative Sum**
+    ```python
+    df['cumsum'] = df['value'].cumsum()
+    ```
+
+40. **Add Year, Month, Weekday Features**
+    ```python
+    df['year'] = df.index.year
+    df['month'] = df.index.month
+    df['weekday'] = df.index.weekday
+    ```
+
+---
+
+### **9. Decomposition & Detrending**
+41. **Detrending the Time Series**
+    ```python
+    detrended = df['value'] - df['value'].rolling(window=12).mean()
+    ```
+
+42. **Apply Seasonal Decomposition**
+    ```python
+    from statsmodels.tsa.seasonal import seasonal_decompose
+    result = seasonal_decompose(df['value'], model='multiplicative', period=12)
+    result.plot()
+    ```
+
+43. **Perform Time Series Detrending with Differencing**
+    ```python
+    df['diff'] = df['value'] - df['value'].shift(1)
+    ```
+
+44. **Seasonal Adjustment**
+    ```python
+    df['seasonal_adjustment'] = df['value'] / result.seasonal
+    ```
+
+45. **Examine Trend Removal**
+    ```python
+    df['trend_removed'] = df['value'] - df['trend']
+    ```
+
+---
+
+### **10. Time Series Decomposition**
+46. **Decompose Additive Time Series**
+    ```python
+    result = seasonal_decompose(df['value'], model='additive', period=12)
+    result.plot()
+    ```
+
+47. **Decompose Multiplicative Time Series**
+    ```python
+    result = seasonal_decompose(df['value'], model='multiplicative', period=12)
+    result.plot()
+    ```
+
+48. **Examine Residual Component of Decomposition**
+    ```python
+    result.resid.plot()
+    ```
+
+49. **Check the Trend from Decomposition**
+    ```python
+    result.trend.plot()
+    ```
+
+50. **Check the Seasonal Component**
+    ```python
+    result.seasonal.plot()
+    ```
+
+---
+
+### **11. Advanced Time Series Plots**
+51. **Boxplot of Time Series by Month**
+    ```python
+    df.groupby(df.index.month)['value'].boxplot()
+    ```
+
+52. **Line Plot with Confidence Intervals**
+    ```python
+    df['value'].plot()
+    df['value'].rolling(window=12).mean().plot(style='--')
+    ```
+
+53. **Violin Plot by Year**
+    ```python
+    sns.violinplot(x='year', y='value', data=df)
+    ```
+
+54. **Heatmap of Time Series Data by Hour of the Day**
+    ```python
+    df['hour'] = df.index.hour
+    df_pivot = df.pivot_table(values='value', columns='hour', index=df.index.date)
+    sns.heatmap(df_pivot)
+    ```
+
+55. **Time Series Cross Validation**
+    ```python
+    from sklearn.model_selection import TimeSeriesSplit
+    ts_cv = TimeSeriesSplit(n_splits=5)
+    for train_idx, test_idx in ts_cv.split(df):
+        train, test = df.iloc[train_idx], df.iloc[test_idx]
+    ```
+
+---
+
+### **12. Forecasting & Model Evaluation**
+56. **Plot Forecast vs Actual**
+    ```python
+    forecast = model.predict(n_periods=30)
+    plt.plot(df['value'], label='Actual')
+    plt.plot(forecast, label='Forecast')
+    ```
+
+57. **Train a SARIMA Model**
+    ```python
+    from statsmodels.tsa.statespace.sarimax import SARIMAX
+    model = SARIMAX(df['value'], order=(1, 1, 1), seasonal_order=(1, 1, 1, 12))
+    results = model.fit()
+    ```
+
+58. **Plot Forecast Residuals**
+    ```python
+    residuals = results.resid
+    plt.plot(residuals)
+    ```
+
+59. **Train an ARIMA Model**
+    ```python
+    from statsmodels.tsa.arima.model import ARIMA
+    model = ARIMA(df['value'], order=(5,1,0))
+    results = model.fit()
+    ```
+
+60. **Evaluate RMSE for Forecasting**
+    ```python
+    from sklearn.metrics import mean_squared_error
+    rmse = np.sqrt(mean_squared_error(test_data, forecast))
+    print(f"RMSE: {rmse}")
+    ```
+
+---
+
+### **13. Advanced Analysis**
+61. **Find Anomalies Using Rolling Z-Score**
+    ```python
+    df['z_score'] = (df['value'] - df['value'].rolling(window=12).mean()) / df['value'].rolling(window=12).std()
+    ```
+
+62. **Detecting Change Points**
+    ```python
+    from ruptures import Pelt
+    algo = Pelt(model="l2").fit(df['value'])
+    change_points = algo.predict(pen=10)
+    ```
+
+63. **Detect Seasonal Changes**
+    ```python
+    from statsmodels.tsa.seasonal import STL
+    stl = STL(df['value'], seasonal=13)
+    result = stl.fit()
+    result.plot()
+    ```
+
+64. **Examine Heteroscedasticity**
+    ```python
+    import statsmodels.api as sm
+    sm.graphics.tsa.plot_acf(df['value'], lags=50)
+    ```
+
+65. **Cross-Validate Time Series Model**
+    ```python
+    from sklearn.model_selection import TimeSeriesSplit
+    ts_split = TimeSeriesSplit(n_splits=3)
+    ```
+
+---
+
+### **14. Data Resampling**
+66. **Resample Time Series to Hourly Data**
+    ```python
+    df_hourly = df.resample('H').mean()
+    ```
+
+67. **Resample Time Series to Weekly Data**
+    ```python
+    df_weekly = df.resample('W').sum()
+    ```
+
+68. **Downsampling to Monthly Data**
+    ```python
+    df_monthly = df.resample('M').mean()
+    ```
+
+69. **Up-sampling to Higher Frequency**
+    ```python
+    df_resampled = df.resample('D').pad()
+    ```
+
+70. **Visualize Resampling**
+    ```python
+    df.resample('M').mean()['value'].plot(label='Monthly Mean')
+    ```
+
+---
+
+### **15. Rolling Window Analysis**
+71. **Calculate Rolling Mean**
+    ```python
+    df['rolling_mean'] = df['value'].rolling(window=12).mean()
+    ```
+
+72. **Rolling Median**
+    ```python
+    df['rolling_median'] = df['value'].rolling(window=12).median()
+    ```
+
+73. **Rolling Standard Deviation**
+    ```python
+    df['rolling_std'] = df['value'].rolling(window=12).std()
+    ```
+
+74. **Rolling Skewness**
+    ```python
+    df['rolling_skew'] = df['value'].rolling(window=12).skew()
+    ```
+
+75. **Calculate Rolling Window Variance**
+    ```python
+    df['rolling_var'] = df['value'].rolling(window=12).var()
+    ```
+
+---
+
+### **16. Event and Holiday Analysis**
+76. **Add Indicator for Weekends**
+    ```python
+    df['is_weekend'] = df.index.weekday >= 5
+    ```
+
+77. **Identify Major Holidays**
+    ```python
+    df['is_holiday'] = df.index.isin(holiday_dates)
+    ```
+
+78. **Visualize Impact of Holidays**
+    ```python
+    df.groupby('is_holiday')['value'].mean().plot(kind='bar')
+    ```
+
+79. **Plot Data Before and After Event**
+    ```python
+    event_data = df[df.index > '2022-12-01']
+    event_data['value'].plot()
+    ```
+
+80. **Measure Pre/Post Event Trends**
+    ```python
+    pre_event = df[df.index < '2022-12-01']['value']
+    post_event = df[df.index > '2022-12-01']['value']
+    ```
+
+---
+
+### **17. Statistical Features**
+81. **Calculate Mean and Standard Deviation**
+    ```python
+    df['mean'] = df['value'].rolling(window=12).mean()
+    df['std'] = df['value'].rolling(window=12).std()
+    ```
+
+82. **Compute Kurtosis**
+    ```python
+    from scipy.stats import kurtosis
+    df['kurtosis'] = df['value'].rolling(window=12).apply(kurtosis)
+    ```
+
+83. **Compute Skewness**
+    ```python
+    from scipy.stats import skew
+    df['skew'] = df['value'].rolling(window=12).apply(skew)
+    ```
+
+84. **Calculate Covariance between Series**
+    ```python
+    df[['series1', 'series2']].cov()
+    ```
+
+85. **Calculate Variance**
+    ```python
+    df['variance'] = df['value'].rolling(window=12).var()
+    ```
+
+---
+
+### **18. Anomaly Detection**
+86. **Anomaly Detection Using Z-Score**
+    ```python
+    df['z_score'] = (df['value'] - df['value'].mean()) / df['value'].std()
+    anomalies = df[df['z_score'].abs() > 3]
+    ```
+
+87. **Seasonal Anomaly Detection**
+    ```python
+    seasonal_anomalies = df[df['value'] > seasonal_threshold]
+    ```
+
+88. **Change Point Detection**
+    ```python
+    from ruptures import Pelt
+    algo = Pelt(model="l2").fit(df['value'])
+    change_points = algo.predict(pen=10)
+    ```
+
+89. **Clustering for Anomalies**
+    ```python
+    from sklearn.cluster import DBSCAN
+    model = DBSCAN(eps=0.3, min_samples=10)
+    df['cluster'] = model.fit_predict(df[['value']])
+    ```
+
+90. **Use Isolation Forest for Anomaly Detection**
+    ```python
+    from sklearn.ensemble import IsolationForest
+    model = IsolationForest()
+    df['anomaly'] = model.fit_predict(df[['value']])
+    ```
+
+---
+
+### **19. Advanced Statistical Methods**
+91. **Apply Gaussian Process Regression**
+    ```python
+    from sklearn.gaussian_process import GaussianProcessRegressor
+    model = GaussianProcessRegressor()
+    ```
+
+92. **Use Hidden Markov Models**
+    ```python
+    from hmmlearn.hmm import GaussianHMM
+    model = GaussianHMM(n_components=2)
+    model.fit(df[['value']])
+    ```
+
+93. **Fourier Transform for Seasonality Analysis**
+    ```python
+    fft_result = np.fft.fft(df['value'])
+    ```
+
+94. **Calculate Spectral Density**
+    ```python
+    from scipy.signal import welch
+    f, Pxx = welch(df['value'])
+    ```
+
+95. **Apply Principal Component Analysis (PCA)**
+    ```python
+    from sklearn.decomposition import PCA
+    pca = PCA(n_components=1)
+    pca_features = pca.fit_transform(df[['value']])
+    ```
+
+---
+
+### **20. Time Series Clustering**
+96. **Clustering with K-Means**
+    ```python
+    from sklearn.cluster import KMeans
+    kmeans = KMeans(n_clusters=3)
+    df['cluster'] = kmeans.fit_predict(df[['value']])
+    ```
+
+97. **Use DBSCAN for Density-Based Clustering**
+    ```python
+    from sklearn.cluster import DBSCAN
+    db = DBSCAN(eps=0.3, min_samples=10)
+    df['cluster'] = db.fit_predict(df[['value']])
+    ```
+
+98. **Self-Organizing Maps for Time Series Clustering**
+    ```python
+    from minisom import MiniSom
+    som = MiniSom(10, 10, 1)
+    som.train(df[['value']], 100)
+    ```
+
+99. **Hierarchical Clustering**
+    ```python
+    from sklearn.cluster import AgglomerativeClustering
+    hierarchical_clustering = AgglomerativeClustering(n_clusters=3)
+    df['cluster'] = hierarchical_clustering.fit_predict(df[['value']])
+    ```
+
+100. **Dynamic Time Warping (DTW)**
+    ```python
+    from tslearn.metrics import dtw
+    distance = dtw(df1['value'], df2['value'])
+    ```
+
