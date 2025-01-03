@@ -1,7 +1,3 @@
-To help you break down the terms in the provided text from your README and provide the corresponding formulas (if any), I've separated the topics into their relevant sections. Where formulas exist, I've written them using LaTeX notation (denoted by `$$ ... $$`) and included explanations for each term.
-
----
-
 ### **Probability and Statistics**
 
 #### **1. Counting (Permutation and Combinations)**
