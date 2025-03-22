@@ -18,7 +18,7 @@ You can also use others images instead of bollywood actress
 Clone the repository
 
 ```bash
-git clone 
+git clone https://github.com/Delight-In/Which_Celebrity_You_Look_Like.git
 ```
 
 ## STEP 02: 
